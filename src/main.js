@@ -6,6 +6,9 @@ import router from "@/router";
 import store from "@/store";
 import "@/assets/sass/main.scss";
 import VueCookies from "vue-cookies";
+import io from "socket.io-client";
+
+Vue.prototype.socket = io("localhost:3000");
 
 Vue.use(VueCookies);
 
