@@ -1,11 +1,16 @@
-<template> </template>
+<template>
+  <LoginCard/>
+</template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld";
+import LoginCard from "@/components/LoginCard";
 
 export default {
   components: {
-    HelloWorld
+    LoginCard
+  },
+  mounted() {
+    console.log($cookies)
   }
 };
 </script>
