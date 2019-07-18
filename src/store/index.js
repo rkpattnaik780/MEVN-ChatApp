@@ -5,8 +5,10 @@ import userModule from "./modules/user";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+let store = new Vuex.Store({
   modules: {
     user: userModule
   }
 });
+
+export { store };

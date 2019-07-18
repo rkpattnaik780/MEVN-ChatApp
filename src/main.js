@@ -3,7 +3,7 @@ import Vue from "vue";
 import "./plugins/vuetify";
 import App from "./App.vue";
 import router from "@/router";
-import store from "@/store";
+import { store } from "@/store";
 import "@/assets/sass/main.scss";
 import VueCookies from "vue-cookies";
 import io from "socket.io-client";

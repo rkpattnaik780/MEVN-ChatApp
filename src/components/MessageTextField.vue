@@ -37,11 +37,17 @@ export default {
       message : ""
     }
   },
+  props: ['currentUser'],
   methods: {
     sendMessage(message){
+      console.log(this.currentUser);
+      let id = this.currentUser.githubId;
       this.socket.emit("send_message",{
-        "msg": message
+        "message": message,
+        "githubId": id,
+        "time": new Date().getTime()
       });
+      this.message = "";
     }
   }
 };

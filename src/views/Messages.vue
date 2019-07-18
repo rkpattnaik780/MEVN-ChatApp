@@ -2,10 +2,10 @@
     <v-container row nowrap sm6 align-center class="message-box-2">
       <v-card>
       <v-flex xs12>
-        <MessageList/>
+        <MessageList :currentUser="currentUser"/>
       </v-flex>
       <v-flex xs12>
-        <MessageTextField/>
+        <MessageTextField :currentUser="currentUser"/>
       </v-flex>
       </v-card>
     </v-container>
@@ -20,7 +20,12 @@ export default {
   components : {
     MessageList,
     MessageTextField
-  }
+  },
+  computed :{
+    currentUser(){
+      return this.$store.getters["user/getUserDetails"];
+    }
+  },
 };
 </script>
 

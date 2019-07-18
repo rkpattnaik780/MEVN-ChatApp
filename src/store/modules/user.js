@@ -1,6 +1,10 @@
 function defaultState() {
   return {
-    userDetails: {}
+    userDetails: {
+      githubId: "23582438",
+      username: "rkpattnaik780",
+      image: "https://avatars3.githubusercontent.com/u/23582438?v=4"
+    }
   };
 }
 

@@ -1,36 +1,30 @@
 <template>
     <v-flex xs12>
       <v-card class="message-box">
-        <v-list two-line>
-          <template v-for="(item, index) in items">
-            <v-subheader
-              v-if="item.header"
-              :key="item.header"
-            >
-              {{ item.header }}
-            </v-subheader>
-
-            <v-divider
-            v-else-if="item.divider"
-              :key="index"
-              :inset="item.inset"
-            ></v-divider>
-
-            <v-list-tile
-              v-else
-              :key="item.title"
-              avatar
-            >
-              <v-list-tile-avatar>
-                <img :src="item.avatar">
-              </v-list-tile-avatar>
-
-              <v-list-tile-content>
-                {{ item.subtitle }}
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
+        <template v-for="(message, index) in messages">
+          <v-layout row nowrap :key="index" class="message" v-if="message.githubId == currentUser.githubId">
+            <v-flex xs11>
+              <v-layout class="message-text">
+                {{ message.message }}
+              </v-layout>
+            </v-flex>
+            <v-flex xs1>
+              <img :src="message.image" width="40px" height="40px">
+            </v-flex>
+            <!-- <v-divider/> -->
+          </v-layout> 
+          <v-layout v-else row nowrap :key="index" class="message">
+            <v-flex xs1>
+              <img :src="message.image" width="40px" height="40px">
+            </v-flex>
+            <v-flex xs11>
+              <v-layout class="message-text">
+                {{ message.message }}
+              </v-layout>
+            </v-flex>
+            <!-- <v-divider/> -->
+          </v-layout>         
+        </template>
       </v-card>
     </v-flex>
 </template>
@@ -43,80 +37,22 @@ export default {
   components: {
     NavBar
   },
+  props: ['currentUser'],
   data () {
     return {
-      items: [
-        { header: 'Today' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "jud.n.sfr fdn,gknnjgk dmorjdfng jsofid.ofijoidfd jmigbkg.cdn ifdj.ogcgbccg ijfdfdjojdfd jifd.oojfjfdfd ijo.gdng.gdtjg.gfc ijgfjgjgoi/jg"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "1 <span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend."
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "2 <span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "3 <span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend."
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?"
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend."
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?"
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend."
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?"
-        }
-      ]
+      messages: []
+    }
+  },
+  mounted(){
+    this.fetchMessages();
+    this.socket.on('messages_fetched', (data) => {
+      console.log(data);
+      this.messages = data;
+    });
+  },
+  methods: {
+    fetchMessages() {
+      this.socket.emit("fetch_messages");
     }
   }
 };
@@ -127,5 +63,14 @@ export default {
   height : 65vh !important;
   min-width: 410px;
   overflow-y: scroll;
+}
+.message{
+  padding: 10px;
+}
+.message-text{
+  padding: 5px 10px 5px 10px;
+  border: 0.1px solid grey;
+  margin: 0 10px;
+  border-radius: 10px;
 }
 </style>
