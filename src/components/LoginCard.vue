@@ -10,12 +10,10 @@
         </v-card-title>
 
         <v-card-actions>
-          <a href="http://localhost:3000/auth/github">
-            <v-btn outline block>
-              <img width="30" height="30" :src="github_logo"/>
-                Sign In with GitHub
-            </v-btn>
-          </a>
+          <v-btn outline block @click="signInGithub">
+            <img width="30" height="30" :src="github_logo"/>
+              Sign In with GitHub
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -23,7 +21,6 @@
 </template>
 
 <script>
-import api from "@/api/";
 
 export default {
   data () {
@@ -33,9 +30,8 @@ export default {
     }
   },
   methods: {
-    githubLogin(){
-      console.log("hey");
-      api.githubLogin();
+    signInGithub(){
+      window.location.href = "http://localhost:3000/auth/github";
     }
   }
 };

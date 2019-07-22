@@ -15,9 +15,15 @@ var app = express();
 var index = require('./routes/index');
 var authRoutes = require('./routes/auth-routes');
 
+var corsOption = {
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true
+};
+
 app.set('view engine', 'jade');
 
-app.use(cors());
+app.use(cors(corsOption));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -26,10 +32,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cookieSession({
-  maxAge: 24 * 60 * 60 * 1000,
-  keys: ['qwefgfds']
-}));
+app.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: ["qwefgfds"]
+  })
+);
 
 // initialize passport
 app.use(passport.initialize());

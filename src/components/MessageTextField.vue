@@ -1,6 +1,6 @@
 <template>
   <v-form @submit.prevent="sendMessage(message)">
-    <v-container class="widened-container">
+    <v-container class="message-form">
       <v-layout row nowrap>
         <v-flex column
           xs9
@@ -16,10 +16,11 @@
         <v-flex xs3 column align-center>
         <v-layout column nowrap pa-1>
           <v-flex row>
-            <v-btn type="submit" class="send-btn">Submit</v-btn>
+            <v-btn type="submit">Submit</v-btn>
           </v-flex>
           <v-flex row>
-            <v-btn class="send-btn">Hello World!</v-btn>
+            <input v-show="false" ref="inputUpload" type="file" @change="uploadFile($event.target.files[0])">
+            <v-btn @click="$refs.inputUpload.click()">Upload</v-btn>
           </v-flex>
         </v-layout>
         </v-flex>
@@ -34,33 +35,27 @@
 export default {
   data(){
     return {
-      message : ""
+      message : "",
+      file : null
     }
   },
   props: ['currentUser'],
   methods: {
     sendMessage(message){
-      console.log(this.currentUser);
-      let id = this.currentUser.githubId;
+      let id = this.currentUser.githubId;      
       this.socket.emit("send_message",{
         "message": message,
         "githubId": id,
         "time": new Date().getTime()
       });
       this.message = "";
+    },
+    uploadFile(file) {
+      console.log("hello");
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.widened{
-  max-width: 100% !important;
-}
-.message-text{
-  // width: 35vw;
-}
-.send-btn{
-  width: 10vw;
-}
 </style>

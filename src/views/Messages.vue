@@ -1,5 +1,5 @@
 <template>
-    <v-container row nowrap sm6 align-center class="message-box-2">
+    <v-container row nowrap sm6 align-center>
       <v-card>
       <v-flex xs12>
         <MessageList :currentUser="currentUser"/>

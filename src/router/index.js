@@ -2,10 +2,11 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import Messages from "@/views/Messages.vue";
+import { store } from "@/store";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: "history",
   routes: [
     {
@@ -16,16 +17,38 @@ export default new Router({
     {
       path: "/messages",
       name: "messages",
-      component: Messages
+      component: Messages,
+      meta: { requiresAuth: true }
     },
     {
       path: "/about",
       name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "@/views/About.vue")
+        import(/* webpackChunkName: "about" */ "@/views/About.vue"),
+      meta: { requiresAuth: false }
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+
+  const isLoggedIn =
+    store.getters["user/getUserDetails"] != undefined ? true : false;
+
+  // // If user is logged in. Don't allow him to visit login page.
+  if (isLoggedIn && to.name === "home") {
+    next({ name: "messages" });
+  }
+
+  if (to.meta.requiresAuth) {
+    if (!isLoggedIn) {
+      next({ name: "home" });
+    } else {
+      next();
+    }
+  }
+
+  next();
+});
+
+export { router };

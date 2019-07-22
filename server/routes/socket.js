@@ -3,10 +3,12 @@ const Message = require("../models/message-model");
 var prepareSocket = function(socket) {
   console.log("hello world");
   socket.on("send_message", function(data) {
-    new Message(data).save().then(message => {
+    new Message(data).save().then(() => {
       fetchMessages();
     });
   });
+
+  socket.join("main");
 
   socket.on("fetch_messages", fetchMessages);
 
@@ -34,6 +36,7 @@ var prepareSocket = function(socket) {
     ]).exec((err, messages) => {
       if (err) throw err;
       socket.emit("messages_fetched", messages);
+      socket.to("main").emit("messages_fetched", messages);
     });
   }
 };

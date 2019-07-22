@@ -1,5 +1,5 @@
 const passport = require("passport");
-var GitHubStrategy = require("passport-github").Strategy;
+var GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../models/user-model");
 
 passport.serializeUser((user, done) => {
