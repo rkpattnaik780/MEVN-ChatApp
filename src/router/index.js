@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import Messages from "@/views/Messages.vue";
+import NotFound from "@/views/NotFound.vue";
 import { store } from "@/store";
 
 Vue.use(Router);
@@ -26,6 +27,11 @@ const router = new Router({
       component: () =>
         import(/* webpackChunkName: "about" */ "@/views/About.vue"),
       meta: { requiresAuth: false }
+    },
+    {
+      path: "*",
+      name: "default",
+      component: NotFound
     }
   ]
 });
