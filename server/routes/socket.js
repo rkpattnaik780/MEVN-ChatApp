@@ -28,9 +28,10 @@ var prepareSocket = function(socket) {
         $project: {
           _id: 1,
           message: 1,
-          githubId: 1,
+          time: 1,
           username: "$user.username",
-          image: "$user.image"
+          image: "$user.image",
+          name: "$user.name"
         }
       }
     ]).exec((err, messages) => {

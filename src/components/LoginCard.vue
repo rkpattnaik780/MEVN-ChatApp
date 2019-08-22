@@ -40,5 +40,6 @@ export default {
 <style lang="scss" scoped>
 .login-card{
   max-width: 400px;
+  width: 400px;
 }
 </style>

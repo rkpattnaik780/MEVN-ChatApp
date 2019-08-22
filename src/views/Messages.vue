@@ -1,5 +1,5 @@
 <template>
-    <v-container row nowrap sm6 align-center>
+    <v-container row nowrap sm6 align-center class="message-list">
       <v-card>
       <v-flex xs12>
         <MessageList :currentUser="currentUser"/>
@@ -30,9 +30,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.message-box-2{
-  width: 50vw;
-  min-width: 410px;
+@media only screen and (max-width: 500px) {
+  .message-list{
+    padding: 1px;
+  }
 }
 </style>
 

@@ -32,6 +32,7 @@ passport.use(
           new User({
             githubId: profile.id,
             username: profile.username,
+            name: profile.displayName,
             image: profile._json.avatar_url
           })
             .save()
