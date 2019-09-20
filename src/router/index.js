@@ -31,7 +31,8 @@ const router = new Router({
     {
       path: "*",
       name: "default",
-      component: NotFound
+      component: NotFound,
+      meta: { requiresAuth: false }
     }
   ]
 });
@@ -49,9 +50,9 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     if (!isLoggedIn) {
       next({ name: "home" });
-    } else {
+    } /*else {
       next();
-    }
+    }*/
   }
 
   next();

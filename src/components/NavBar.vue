@@ -9,7 +9,7 @@
     >
       <v-list>
         <template>
-          <v-list-tile>
+          <v-list-tile @click="() => this.$router.push('about')">
             <v-list-tile-content>About us</v-list-tile-content>
           </v-list-tile>
           <v-list-tile v-if="currentUser" @click="signOut">

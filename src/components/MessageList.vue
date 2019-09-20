@@ -49,6 +49,7 @@
 
 <script>
 import NavBar from "@/components/NavBar";
+import Loader from "@/components/Loader";
 
 export default {
   name : 'MessageList',

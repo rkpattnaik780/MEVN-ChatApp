@@ -16,16 +16,13 @@ export default {
   components: {
     NavBar
   },
-  mounted() {
+  created() {
     this.checkIfLoggedIn();
   },
   methods: {
     checkIfLoggedIn() {
       api.checkIfLoggedIn().then(res => {
-        console.log(res.data)
-        console.log(res.data.user);
-        console.log(this);
-        if(res.data.user){
+        if(res.data.user && this.$router.currentRoute.name == "home"){
           this.$store.commit("user/setUserDetails", res.data.user);
           this.$router.push("/messages");
         }
