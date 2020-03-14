@@ -17,8 +17,8 @@ var prepareSocket = function(socket) {
       {
         $lookup: {
           from: "users",
-          localField: "githubId",
-          foreignField: "githubId",
+          localField: "providerId",
+          foreignField: "providerId",
           as: "user"
         }
       },

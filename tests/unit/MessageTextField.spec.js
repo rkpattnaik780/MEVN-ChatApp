@@ -17,7 +17,7 @@ describe("MessageTextField.vue", () => {
     router,
     propsData: {
       currentUser: {
-        githubId: 123456
+        providerId: 123456
       }
     }
   });
