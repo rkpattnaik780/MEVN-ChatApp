@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
   message: String,
-  githubId: String,
+  providerId: String,
   time: Date
 });
 

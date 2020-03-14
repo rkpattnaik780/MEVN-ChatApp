@@ -40,7 +40,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://mongo:27017/oauth-test');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/oauth-test');
 
 var db = mongoose.connection;
 db.once('open', function () {
