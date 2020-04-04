@@ -37,14 +37,18 @@ router.get(
 // Google OAuth
 router.get(
   "/google",
-  passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/plus.login"]
-  })
+  passport.authenticate(
+    "google",
+    {
+      scope: ["https://www.googleapis.com/auth/plus.login"]
+    },
+    generateToken
+  )
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }, generateToken),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   function(req, res) {
     res.redirect("http://localhost:8080/");
   }

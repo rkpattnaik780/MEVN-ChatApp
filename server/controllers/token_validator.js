@@ -45,7 +45,7 @@ let checkToken = (req, res, next) => {
       }
     });
   } else {
-    return res.json({
+    res.json({
       success: false,
       message: "Auth token is not supplied"
     });
