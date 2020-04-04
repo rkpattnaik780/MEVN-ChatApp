@@ -1,28 +1,29 @@
+require('dotenv').config();
 var createError = require("http-errors");
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
 var mongoose = require("mongoose");
-var bodyParser = require('body-parser');
-var cookieSession = require('cookie-session');
-var passport = require('passport');
-const passportSetup = require('./config/passport-setup');
-var cors = require('cors');
+var bodyParser = require("body-parser");
+var cookieSession = require("cookie-session");
+var passport = require("passport");
+const passportSetup = require("./config/passport-setup");
+var cors = require("cors");
 
 var app = express();
-
-var index = require('./routes/index');
-var authRoutes = require('./routes/auth-routes');
+var index = require("./routes/index");
+var authRoutes = require("./routes/auth-routes");
 
 var corsOption = {
   origin: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  exposedHeaders: ["x-auth-token", "refresh-token"]
 };
 
 app.use(cors(corsOption));
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -40,17 +41,17 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/oauth-test');
+mongoose.connect(process.env.MONGOLAB_URI);
 
 var db = mongoose.connection;
-db.once('open', function () {
+db.once("open", function() {
   console.log("Connection to MongoDB succesful...");
-}).on('error', function (error) {
+}).on("error", function(error) {
   console.log("MongoDB connection error: ", error);
 });
 
-app.use('/', index);
-app.use('/auth', authRoutes);
+app.use("/", index);
+app.use("/auth", authRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
