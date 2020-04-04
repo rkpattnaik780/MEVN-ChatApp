@@ -45,6 +45,10 @@ Clone this repo to your local machine
     cd server/
     npm install
 
+## Configuring .env file
+- rename .newenv to .env
+- fill configuartion variables
+
 ### Running the server
 
     npm start #in server directory
