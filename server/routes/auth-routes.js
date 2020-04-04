@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const passport = require("passport");
+let { generateToken, tokenList } = require("../controllers/token_generator");
 
 router.get("/check", (req, res) => {
   console.log("user - " + req.user);
   if (req.user === undefined) {
     res.json({});
   } else {
+    res.set("x-auth-token", req.session.token || "Not authorised");
+    res.set("refresh-token", req.session.refreshToken || "Not authorised");
     res.json({
       user: req.user
     });
@@ -14,11 +17,13 @@ router.get("/check", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.logout();
-  res.json({ msg: "Logged out" });
+  delete tokenList[req.session.refreshToken];
+  req.session = {};
+  res.json({ msg: "Logged out", tokenlist: tokenList });
 });
 
 //Github OAuth
-router.get("/github", passport.authenticate("github"));
+router.get("/github", passport.authenticate("github"), generateToken);
 
 router.get(
   "/github/redirect",
@@ -30,11 +35,16 @@ router.get(
 );
 
 // Google OAuth
-router.get("/google", passport.authenticate("google",{ scope: ['https://www.googleapis.com/auth/plus.login'] }));
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"]
+  })
+);
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", { failureRedirect: "/login" }, generateToken),
   function(req, res) {
     res.redirect("http://localhost:8080/");
   }

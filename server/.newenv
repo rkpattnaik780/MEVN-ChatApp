@@ -1,0 +1,18 @@
+# MongoDB path, eg: mongodb://localhost:27017/mevn-chat-app
+MONGOLAB_URI=
+
+# eg: my-secret
+ACCESS_TOKEN_SECRET=
+
+# eg: my-refresh-secret
+REFRESH_TOKEN_SECRET=
+
+# Your Github OAuth credentials
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GITHUB_CALLBACK_URL=
+
+# Your Google OAuth credentials
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=

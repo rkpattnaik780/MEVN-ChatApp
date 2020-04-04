@@ -31,9 +31,9 @@ function FindOrCreate(profile, done, findObject, createObject) {
 passport.use(
   new GitHubStrategy(
     {
-      clientID: "41487ad2b4772d6a7094",
-      clientSecret: "e4bb42e29d9dd1bb0d698496431af381cbcbc99c",
-      callbackURL: "/auth/github/redirect"
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: process.env.GITHUB_CALLBACK_URL
     },
     (accessToken, refreshToken, profile, done) => {
       console.log("passport call back fired !!");
@@ -56,10 +56,9 @@ passport.use(
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        "324416967686-3bcokef474f6vmng9q40lb2lkmoab930.apps.googleusercontent.com",
-      clientSecret: "zFdK89F4uBqQgUQQxCxZ3ilB",
-      callbackURL: "/auth/google/callback"
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL
     },
     (accessToken, refreshToken, profile, done) => {
       FindOrCreate(
