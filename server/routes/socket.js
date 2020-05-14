@@ -2,8 +2,6 @@ const Message = require("../models/message-model");
 var connected_users = [];
 
 var prepareSocket = function(socket) {
-  console.log("hello world");
-
   // Join main room
   socket.join("main");
 
@@ -46,30 +44,22 @@ var prepareSocket = function(socket) {
     });
   }
 
-
-
   socket.on("user_joined", async data => {
-    console.log(data);
-    console.log("Before join: " + connected_users);
     if (!connected_users.some(user => user._id === data._id)) {
       connected_users.push({
         _id: data._id,
         username: data.username,
         image: data.image
       });
-      console.log("inside if");
     }
-    console.log("After join: " + connected_users);
     socket.emit("users_fetched", connected_users);
-    socket.to("main").emit("messages_fetched", connected_users);
+    socket.to("main").emit("users_fetched", connected_users);
   });
 
   socket.on("user_disconnected", async data => {
-    console.log("Before disconnect: " + connected_users);
     connected_users = connected_users.filter(user => user._id !== data._id);
-    console.log("After disconnect: " + connected_users);
     socket.emit("users_fetched", connected_users);
-    socket.to("main").emit("messages_fetched", connected_users);
+    socket.to("main").emit("users_fetched", connected_users);
   });
 };
 
