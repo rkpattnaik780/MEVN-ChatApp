@@ -71,10 +71,14 @@ export default {
   },
   methods: {
     signOut(){
+      this.disconnect();
       api.signOut().then(res => {
         this.$store.commit("user/reset");
         this.$router.push("/");
       });
+    },
+    disconnect() {
+      this.socket.emit("user_disconnected", this.currentUser);
     }
   },
   data() {
