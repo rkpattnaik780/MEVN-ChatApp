@@ -1,15 +1,18 @@
 const Message = require("../models/message-model");
+var connected_users = [];
 
 var prepareSocket = function(socket) {
-  console.log("hello world");
+  // Join main room
+  socket.join("main");
+
+  // Send message event handler
   socket.on("send_message", function(data) {
     new Message(data).save().then(() => {
       fetchMessages();
     });
   });
 
-  socket.join("main");
-
+  // Fetch messages event handler
   socket.on("fetch_messages", fetchMessages);
 
   function fetchMessages() {
@@ -40,6 +43,24 @@ var prepareSocket = function(socket) {
       socket.to("main").emit("messages_fetched", messages);
     });
   }
+
+  socket.on("user_joined", async data => {
+    if (!connected_users.some(user => user._id === data._id)) {
+      connected_users.push({
+        _id: data._id,
+        username: data.username,
+        image: data.image
+      });
+    }
+    socket.emit("users_fetched", connected_users);
+    socket.to("main").emit("users_fetched", connected_users);
+  });
+
+  socket.on("user_disconnected", async data => {
+    connected_users = connected_users.filter(user => user._id !== data._id);
+    socket.emit("users_fetched", connected_users);
+    socket.to("main").emit("users_fetched", connected_users);
+  });
 };
 
 module.exports = prepareSocket;
