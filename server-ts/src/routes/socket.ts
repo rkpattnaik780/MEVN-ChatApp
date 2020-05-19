@@ -7,4 +7,4 @@ export const prepareSocket = (socket: any) => {
     //   fetchMessages();
     // });
   });
-}
+};

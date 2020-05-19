@@ -12,7 +12,9 @@ import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 import { session, initialize } from "passport";
 import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
-const passportSetup = require("./config/passport-setup");
+//const passportSetup = require("./config/passport-setup");
+//import * as passportSetup from "./config/passport-setup";
+const passportSetup = import("./config/passport-setup");
 
 // Controllers (route handlers)
 import { index } from "./routes/index";

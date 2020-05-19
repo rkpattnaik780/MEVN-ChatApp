@@ -4,6 +4,7 @@ function isAuthenticated(req, res, next) {
   // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
   // you can do this however you want with whatever variables you set up
   if (req.user) {
+    console.log(`in isAuthenticated, req.user is present: ${req.user}`);
     return next();
   }
 

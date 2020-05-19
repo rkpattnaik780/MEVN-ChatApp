@@ -6,6 +6,6 @@ const messageSchema = new Schema({
   time: Date
 });
 
-const Message = model<Message & Document>("message", messageSchema);
+const Message = model<Document>("message", messageSchema);
 
 export default Message;

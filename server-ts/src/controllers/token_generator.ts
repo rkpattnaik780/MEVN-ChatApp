@@ -1,3 +1,6 @@
+import * as jwt from "jsonwebtoken";
+const tokenList = {};
+
 const createAccessToken = (auth) => {
   return jwt.sign(
     {
@@ -22,10 +25,10 @@ export const createRefreshToken = (auth) => {
   );
 };
 
-export const generateToken = (req: Request, res: Response) => {
+export const generateToken =  (req, res) => {
   // Create tokens
-  let token = createAccessToken(req.user);
-  let refreshToken = createRefreshToken(req.user);
+  const token = createAccessToken(req.user);
+  const refreshToken = createRefreshToken(req.user);
 
   // Pass tokens to session
   req.session.token = token;

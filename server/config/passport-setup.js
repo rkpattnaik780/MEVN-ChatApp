@@ -4,10 +4,12 @@ var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const User = require("../models/user-model");
 
 passport.serializeUser((user, done) => {
+  console.log(`serializeUser user: ${user}`);
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
+  console.log(`serializeUser userId: ${id}`);
   User.findById(id).then(user => {
     done(null, user);
   });
@@ -17,11 +19,13 @@ function FindOrCreate(profile, done, findObject, createObject) {
   console.log(profile._json.sub);
   User.findOne(findObject).then(currentUser => {
     if (currentUser) {
+      console.log("user found: " + currentUser);
       // already have this user
       done(null, currentUser);
     } else {
       // if not, create user in our db
       new User(createObject).save().then(newUser => {
+        console.log("saving user");
         done(null, newUser);
       });
     }
