@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
-const tokenList = {};
+export const tokenList = {};
 
-const createAccessToken = (auth) => {
+export const createAccessToken = (auth) => {
   return jwt.sign(
     {
       id: auth.id

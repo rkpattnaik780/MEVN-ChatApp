@@ -12,8 +12,6 @@ import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 import { session, initialize } from "passport";
 import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
-//const passportSetup = require("./config/passport-setup");
-//import * as passportSetup from "./config/passport-setup";
 const passportSetup = import("./config/passport-setup");
 
 // Controllers (route handlers)
@@ -40,6 +38,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.use(compression());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
@@ -53,22 +52,24 @@ const corsOption: any = {
   exposedHeaders: ["x-auth-token", "refresh-token"]
 };
 app.use(cors(corsOption));
-app.use(cookieParser());
 
 app.use(
     express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
+);
+
+app.use(
+    cookieSession({
+        name: "session",
+        maxAge: 24 * 60 * 60 * 1000,
+        keys: ["qwefgfds"]
+    })
 );
 
 // initialize passport
 app.use(initialize());
 app.use(session());
 
-app.use(
-  cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: ["qwefgfds"]
-  })
-);
+
 
 /**
  * Primary app routes.

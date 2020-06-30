@@ -42,8 +42,10 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn =
     store.getters["user/getUserDetails"] != undefined ? true : false;
 
+  console.log("isLogged in - " + isLoggedIn);
   // // If user is logged in. Don't allow him to visit login page.
   if (isLoggedIn && to.name === "home") {
+    console.log("isLogged in - " + isLoggedIn);
     next({ name: "messages" });
   }
 

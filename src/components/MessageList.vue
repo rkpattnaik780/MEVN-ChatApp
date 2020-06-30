@@ -65,7 +65,6 @@ export default {
   mounted(){
     this.fetchMessages();
     this.socket.on('messages_fetched', (data) => {
-      console.log(data);
       this.messages = data;
     });
   },

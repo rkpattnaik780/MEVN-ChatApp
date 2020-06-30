@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {authenticate} from "passport";
-import {generateToken} from "../controllers/token_generator";
+import {generateToken, tokenList} from "../controllers/token_generator";
 
 // Create Express server
 const authRouter = Router();
@@ -37,7 +37,7 @@ authRouter.get(
     authenticate(
         "google",
         {
-            scope: ["https://www.googleapis.com/auth/plus.login"]
+            scope: ["profile"]
         },
         generateToken
     )
@@ -51,5 +51,12 @@ authRouter.get(
         res.redirect("http://localhost:8080/");
     }
 );
+
+authRouter.get("/logout", (req, res) => {
+    req.logout();
+    delete tokenList[req.session.refreshToken];
+    req.session = null;
+    res.json({msg: "Logged out", tokenlist: tokenList});
+});
 
 export default authRouter;

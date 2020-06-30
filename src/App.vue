@@ -22,7 +22,9 @@ export default {
   methods: {
     checkIfLoggedIn() {
       api.checkIfLoggedIn().then(res => {
+        console.log(res.data);
         if(res.data.user && this.$router.currentRoute.name === "home"){
+          console.log(res.data.user);
           this.$store.commit("user/setUserDetails", res.data.user);
           this.$router.push("/messages");
         }

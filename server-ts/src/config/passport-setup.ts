@@ -7,7 +7,7 @@ import User, {UserI} from "../models/user.model";
 const githubStrategy = githubPassport.Strategy;
 const googleStrategy = googlePassport.OAuth2Strategy;
 
-passport.serializeUser((user: UserI, done) => {
+passport.serializeUser<any,any>((user: UserI, done) => {
     done(null, user.id);
 });
 
@@ -17,15 +17,15 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-const FindOrCreate = (profile: any, done: any, findObject: any, createObject: any) => {
+const FindOrCreate = async (profile: any, done: any, findObject: any, createObject: any) => {
     User.findOne(findObject).then(currentUser => {
         if (currentUser) {
             // already have this user
-            done(null, currentUser);
+            return done(null, currentUser);
         } else {
             // if not, create user in our db
             new User(createObject).save().then(newUser => {
-                done(null, newUser);
+                return done(null, newUser);
             });
         }
     });
@@ -61,19 +61,25 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
+            passReqToCallback: true
         },
-        (accessToken, refreshToken, profile, done) => {
-            FindOrCreate(
-                profile,
-                done,
-                {providerId: "go" + profile.id},
-                {
-                    providerId: "go" + profile._json.sub,
-                    username: profile._json.name,
-                    name: profile._json.name,
-                    image: profile._json.picture
+        (request,accessToken, refreshToken, profile, done) => {
+            User.findOne({providerId : "go" + profile.id}).then(currentUser => {
+                if (currentUser) {
+                    // already have this user
+                    done(null, currentUser);
+                } else {
+                    // if not, create user in our db
+                    new User({
+                        providerId: "go" + profile._json.sub,
+                        username: profile._json.name,
+                        name: profile._json.name,
+                        image: profile._json.picture
+                    }).save().then(newUser => {
+                        return done(null, newUser);
+                    });
                 }
-            );
+            });
         }
     )
 );
