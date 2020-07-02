@@ -1,12 +1,16 @@
 import {Message} from "../models/message.model";
+import {Events, Rooms} from "./enums/SocketIO";
+import {Socket} from "socket.io";
+import {MessageCreateDTO, UserMessageDTO} from "../models/message.model.dto";
+import {UserConnectDTO} from "../models/user.model.dto";
 
-let connectedUsers = [];
+let connectedUsers: UserConnectDTO[] = [];
 
-export const prepareSocket = function (socket) {
+export const prepareSocket = (socket: Socket): void => {
     // Join main room
-    socket.join("main");
+    socket.join(Rooms.Main);
 
-    function fetchMessages() {
+    function fetchMessages(): void {
         Message.aggregate([
             {
                 $lookup: {
@@ -28,25 +32,25 @@ export const prepareSocket = function (socket) {
                     name: "$user.name"
                 }
             }
-        ]).exec((err, messages) => {
+        ]).exec((err, messages: UserMessageDTO[]): void => {
             if (err) throw err;
-            socket.emit("messages_fetched", messages);
-            socket.to("main").emit("messages_fetched", messages);
+            socket.emit(Events.MessagesFetched, messages);
+            socket.to(Rooms.Main).emit(Events.MessagesFetched, messages);
         });
     }
 
     // Send message event handler
-    socket.on("send_message", function (data) {
+    socket.on(Events.SendMessage, (data: MessageCreateDTO): void => {
         new Message(data).save().then(() => {
             fetchMessages();
         });
     });
 
     // Fetch messages event handler
-    socket.on("fetch_messages", fetchMessages);
+    socket.on(Events.FetchMessages, fetchMessages);
 
 
-    socket.on("user_joined", async data => {
+    socket.on(Events.UserJoined, async (data: UserConnectDTO): Promise<void> => {
         if (!connectedUsers.some(user => user._id === data._id)) {
             connectedUsers.push({
                 _id: data._id,
@@ -54,13 +58,13 @@ export const prepareSocket = function (socket) {
                 image: data.image
             });
         }
-        socket.emit("users_fetched", connectedUsers);
-        socket.to("main").emit("users_fetched", connectedUsers);
+        socket.emit(Events.UsersFetched, connectedUsers);
+        socket.to(Rooms.Main).emit(Events.UsersFetched, connectedUsers);
     });
 
-    socket.on("user_disconnected", async data => {
+    socket.on(Events.UserDisconnected, async (data: UserConnectDTO): Promise<void> => {
         connectedUsers = connectedUsers.filter(user => user._id !== data._id);
-        socket.emit("users_fetched", connectedUsers);
-        socket.to("main").emit("users_fetched", connectedUsers);
+        socket.emit(Events.UsersFetched, connectedUsers);
+        socket.to(Rooms.Main).emit(Events.UsersFetched, connectedUsers);
     });
 };

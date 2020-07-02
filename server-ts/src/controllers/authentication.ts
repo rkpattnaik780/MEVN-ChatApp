@@ -1,4 +1,6 @@
-function isAuthenticated(req, res, next) {
+import {Request, Response, NextFunction} from "express";
+
+function isAuthenticated(req: Request, res: Response, next: NextFunction) {
     // do any checks you want to in here
 
     // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
