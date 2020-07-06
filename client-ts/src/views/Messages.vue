@@ -8,10 +8,15 @@
         </v-card>
       </v-flex>
 
-      <v-flex align-self-center v-show="!isSidebarOpened" class="xs1" height="100%">
-          <v-btn @click="openSidebar" class="info v-btn--small">
-              <v-icon>mdi-arrow-left</v-icon>
-          </v-btn>
+      <v-flex
+        align-self-center
+        v-show="!isSidebarOpened"
+        class="xs1"
+        height="100%"
+      >
+        <v-btn @click="openSidebar" class="info v-btn--small">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
       </v-flex>
 
       <v-flex v-show="isSidebarOpened" class="xs2" text-xs-left>
@@ -40,7 +45,7 @@
 
           <div class="text-xs-center sidebar-card-btn-container">
             <v-btn class="v-btn--small" @click="closeSidebar" color="info">
-                <v-icon>mdi-close</v-icon>
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </div>
         </v-card>
@@ -49,11 +54,15 @@
   </v-container>
 </template>
 
-<script>
-import MessageList from "@/components/MessageList";
-import MessageTextField from "@/components/MessageTextField";
+<script lang="ts">
+import MessageList from "@/components/MessageList.vue";
+import MessageTextField from "@/components/MessageTextField.vue";
+import Vue from "vue";
+import { UserConnectDTO } from "@/interfaces/user.model.dto";
+import { Events } from "@/enums/SocketIO";
+import { UserGetters, UserMutations } from "@/enums/Vuex";
 
-export default {
+export default Vue.extend({
   name: "Messages",
   components: {
     MessageList,
@@ -61,20 +70,19 @@ export default {
   },
   data() {
     return {
-      active_users: [],
+      active_users: [] as UserConnectDTO[],
       isSidebarOpened: true
     };
   },
   mounted() {
     this.join();
-    this.socket.on("users_fetched", data => {
-      console.log(data);
+    this.socket.on(Events.UsersFetched, (data: UserConnectDTO[]) => {
       this.active_users = data;
     });
   },
   methods: {
     join() {
-      this.socket.emit("user_joined", this.currentUser);
+      this.socket.emit(Events.UserJoined, this.currentUser);
     },
     openSidebar() {
       this.isSidebarOpened = true;
@@ -85,10 +93,10 @@ export default {
   },
   computed: {
     currentUser() {
-      return this.$store.getters["user/getUserDetails"];
+      return this.$store.getters[UserGetters.GetUserDetails];
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
