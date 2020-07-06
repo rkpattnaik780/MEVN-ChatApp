@@ -15,7 +15,9 @@ app.use(errorHandler());
 
 const port = app.get("port");
 const server = http.createServer(app);
-const io = require("socket.io")(server);
+//const io = require("socket.io")(server);
+import * as ioModule from "socket.io";
+const io = ioModule.default(server);
 io.on("connection", prepareSocket);
 
 server.listen(port,() => {
