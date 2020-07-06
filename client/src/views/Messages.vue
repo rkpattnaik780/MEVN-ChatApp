@@ -40,7 +40,7 @@
 
           <div class="text-xs-center sidebar-card-btn-container">
             <v-btn class="v-btn--small" @click="closeSidebar" color="info">
-                <v-icon>mdi-window-close</v-icon>
+                <v-icon>mdi-close</v-icon>
             </v-btn>
           </div>
         </v-card>

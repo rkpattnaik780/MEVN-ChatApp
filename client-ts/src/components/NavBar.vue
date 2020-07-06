@@ -32,17 +32,9 @@
       </v-btn>
       <v-menu bottom nudge-bottom left v-if="currentUser">
         <template v-slot:activator="{ on }">
-          <v-btn
-            dark
-            icon
-            v-on="on"
-          > 
+          <v-btn dark icon v-on="on">
             <v-avatar size="36px">
-              <img
-                v-if="currentUser"
-                :src="currentUser.image"
-                alt="Avatar"
-              >
+              <img v-if="currentUser" :src="currentUser.image" alt="Avatar" />
               <v-icon v-else>person</v-icon>
             </v-avatar>
             <!-- <image :src="currentUser.image"/> -->
@@ -50,7 +42,7 @@
         </template>
 
         <v-list>
-          <v-list-tile @click.prevent = "signOut()">
+          <v-list-tile @click.prevent="signOut()">
             <v-list-tile-title>Sign Out</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -59,26 +51,29 @@
   </span>
 </template>
 
-<script>
-
+<script lang="ts">
+import Vue from "vue";
 import api from "@/api";
-export default {
+import { Events } from "@/enums/SocketIO";
+import { UserGetters, UserMutations } from "@/enums/Vuex";
+
+export default Vue.extend({
   name: "AppNavigation",
-  computed :{
-    currentUser(){
-      return this.$store.getters["user/getUserDetails"];
+  computed: {
+    currentUser() {
+      return this.$store.getters[UserGetters.GetUserDetails];
     }
   },
   methods: {
-    signOut(){
+    signOut() {
       this.disconnect();
-      api.signOut().then(res => {
-        this.$store.commit("user/reset");
+      api.signOut().then(() => {
+        this.$store.commit(UserMutations.Reset);
         this.$router.push("/");
       });
     },
     disconnect() {
-      this.socket.emit("user_disconnected", this.currentUser);
+      this.socket.emit(Events.UserDisconnected, this.currentUser);
     }
   },
   data() {
@@ -86,7 +81,7 @@ export default {
       drawer: false
     };
   }
-};
+});
 </script>
 
 <style scoped></style>
